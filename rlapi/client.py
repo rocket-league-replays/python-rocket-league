@@ -35,6 +35,8 @@ class RocketLeagueAPI(object):
                 raise ValueError('You must supply at least one player ID.')
             elif len(player_id) == 1:
                 player_id = player_id[0]
+            elif len(player_id) > 100:
+                raise ValueError('You may only supply up to 100 player IDs.')
             else:
                 if not allow_multiple:
                     raise ValueError('You may only supply one player ID.')

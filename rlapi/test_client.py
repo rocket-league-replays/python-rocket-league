@@ -62,6 +62,10 @@ class TestAttributeValidation(object):
         with pytest.raises(ValueError):
             rl.get_player_titles('steam', [1, 2])
 
+        # Ensure a maximum of 100 player IDs are allowed.
+        with pytest.raises(ValueError):
+            rl.verify_player_id([1] * 101)
+
     # POST /api/v1/<platform>/playerskills/
     def test_verify_player_id_post(self):
         request_method, request_url, data = rl.get_player_skills('steam', [1, 2, 3])
