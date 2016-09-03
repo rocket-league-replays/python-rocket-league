@@ -1,5 +1,5 @@
 import requests
-from rocket_league import VERSION
+from rlapi import VERSION
 
 
 class RocketLeagueAPI(object):
@@ -13,8 +13,8 @@ class RocketLeagueAPI(object):
 
     def __init__(self, token=None, *args, **kwargs):
         self.TOKEN = token
-        self.DEBUG = kwargs.get('debug', False)
         self.DEBUG_REQUEST = kwargs.get('debug_request', False)
+        self.DEBUG_RESPONSE = kwargs.get('debug_response', False)
 
     def verify_platform(self, platform):
         assert platform in self.PLATFORMS
@@ -49,7 +49,7 @@ class RocketLeagueAPI(object):
     def request(self, endpoint, request_method='GET', data=None):
         request_url = self.API_BASE_URL + endpoint + '/'
 
-        if self.DEBUG:
+        if self.DEBUG_REQUEST:
             return request_method, request_url, data
 
         request = getattr(requests, request_method.lower())(request_url, headers={
@@ -57,7 +57,8 @@ class RocketLeagueAPI(object):
             'User-Agent': 'python-rocket-league ' + '.'.join(str(ver) for ver in VERSION),
         }, data=data)
 
-        if self.DEBUG_REQUEST:
+        # Allow developers to look into the Response object.
+        if self.DEBUG_RESPONSE:
             return request
 
         return request.json()

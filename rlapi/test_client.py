@@ -1,15 +1,15 @@
 import os
 
 import pytest
-from rocket_league.client import RocketLeagueAPI
+from rlapi.client import RocketLeagueAPI
 
+API_KEY = os.getenv('ROCKETLEAGUE_API_KEY', None)
 authenticated = pytest.mark.skipif(
-    not os.getenv('ROCKETLEAGUE_API_KEY', None),
+    not API_KEY,
     reason="Environment variable 'ROCKETLEAGUE_API_KEY' not set or empty."
 )
 
-# Ensure we're hitting the correct endpoints and using the correct request method.
-rl = RocketLeagueAPI('', debug=True)
+rl = RocketLeagueAPI('', debug_request=True)
 
 
 class TestAttributeValidation(object):
@@ -148,7 +148,7 @@ class TestEndpoints(object):
 class TestUnauthenticatedCalls(object):
 
     def test_unauthenticated_call(self):
-        rl = RocketLeagueAPI('', debug_request=True)
+        rl = RocketLeagueAPI('', debug_response=True)
         response = rl.get_regions()
 
         assert response.status_code == 401
@@ -167,7 +167,7 @@ class TestUnauthenticatedCalls(object):
 class TestAuthenticatedCalls(object):
 
     def test_authenticated_get_regions(self):
-        rl = RocketLeagueAPI(os.getenv('ROCKETLEAGUE_API_KEY', ''), debug_request=True)
+        rl = RocketLeagueAPI(API_KEY, debug_response=True)
         response = rl.get_regions()
 
         assert response.status_code == 200
