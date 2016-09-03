@@ -11,6 +11,9 @@ authenticated = pytest.mark.skipif(
 
 rl = RocketLeagueAPI('', debug_request=True)
 
+if API_KEY:
+    rl_auth = RocketLeagueAPI(API_KEY, debug_response=True)
+
 
 class TestAttributeValidation(object):
 
@@ -165,14 +168,200 @@ class TestUnauthenticatedCalls(object):
         assert response == {"detail": "Invalid token header. No credentials provided."}
 
 
-# Test account: 76561198022035654
+# Test accounts:
+# 76561198328949073: Doesn't own the game, non-ASCII chars in name.
+# 76561198022035654: Player that's never logged in.
+# 76561198008869772: Owns the game, has played.
+# 76561198024807207: Random high-level player.
+
 # Test real requests to the API.
 @authenticated
 class TestAuthenticatedCalls(object):
 
-    def test_authenticated_get_regions(self):
-        rl = RocketLeagueAPI(API_KEY, debug_response=True)
-        response = rl.get_regions()
+    def test_authenticated_get_population(self):
+        response = rl_auth.get_population()
 
         assert response.status_code == 200
         assert len(response.json()) > 0
+        assert 'Steam' in response.json()
+
+    def test_authenticated_get_regions(self):
+        response = rl_auth.get_regions()
+
+        assert response.status_code == 200
+        assert len(response.json()) > 0
+        assert {'region': 'EU', 'platforms': 'Steam,PS4,XboxOne'} in response.json()
+
+    def test_authenticated_get_skill_leaderboard_steam_10(self):
+        response = rl_auth.get_skill_leaderboard('steam', 10)
+
+        assert response.status_code == 200
+        assert len(response.json()) == 100
+
+    def test_authenticated_get_skill_leaderboard_ps4_11(self):
+        response = rl_auth.get_skill_leaderboard('ps4', 11)
+
+        assert response.status_code == 200
+        assert len(response.json()) == 100
+
+    def test_authenticated_get_skill_leaderboard_xboxone_12(self):
+        response = rl_auth.get_skill_leaderboard('xboxone', 12)
+
+        assert response.status_code == 200
+        assert len(response.json()) == 100
+
+    def test_authenticated_get_skill_leaderboard_steam_13(self):
+        response = rl_auth.get_skill_leaderboard('steam', 13)
+
+        assert response.status_code == 200
+        assert len(response.json()) == 100
+
+    def test_authenticated_get_stats_leaderboard_steam_assists(self):
+        response = rl_auth.get_stats_leaderboard('steam', 'assists')
+
+        assert response.status_code == 200
+        assert 0 <= len(response.json()) <= 100
+
+    def test_authenticated_get_stats_leaderboard_steam_goals(self):
+        response = rl_auth.get_stats_leaderboard('steam', 'goals')
+
+        assert response.status_code == 200
+        assert 0 <= len(response.json()) <= 100
+
+    def test_authenticated_get_stats_leaderboard_ps4_mvps(self):
+        response = rl_auth.get_stats_leaderboard('ps4', 'mvps')
+
+        assert response.status_code == 200
+        assert 0 <= len(response.json()) <= 100
+
+    def test_authenticated_get_stats_leaderboard_ps4_saves(self):
+        response = rl_auth.get_stats_leaderboard('ps4', 'saves')
+
+        assert response.status_code == 200
+        assert 0 <= len(response.json()) <= 100
+
+    def test_authenticated_get_stats_leaderboard_xboxone_shots(self):
+        response = rl_auth.get_stats_leaderboard('xboxone', 'shots')
+
+        assert response.status_code == 200
+        assert 0 <= len(response.json()) <= 100
+
+    def test_authenticated_get_stats_leaderboard_xboxone_wins(self):
+        response = rl_auth.get_stats_leaderboard('xboxone', 'wins')
+
+        assert response.status_code == 200
+        assert 0 <= len(response.json()) <= 100
+
+    def test_authenticated_get_player_skills_doesnt_own_game(self):
+        response = rl_auth.get_player_skills('steam', 76561198328949073)
+
+        assert response.status_code == 400
+        assert response.json() == {'detail': 'Player ID/name not found'}
+
+    def test_authenticated_get_player_skills_never_logged_in(self):
+        response = rl_auth.get_player_skills('steam', 76561198022035654)
+
+        assert response.status_code == 200
+        assert response.json() == [
+            {
+                'player_skills': [],
+                'user_id': 76561198022035654,
+                'user_name': 'RocketLeagueReplays.com'
+            }
+        ]
+
+    def test_authenticated_get_player_skills_with_data(self):
+        response = rl_auth.get_player_skills('steam', 76561198024807207)
+        data = response.json()[0]
+
+        """
+        [
+            {
+                'user_name': '[SA] Snaski',
+                'user_id': 76561198024807207,
+                'player_skills': [
+                    {
+                        'playlist': 10,
+                        'tier': 0,
+                        'skill': 164,
+                        'tier_max': 0,
+                        'matches_played': 1,
+                        'division': 0
+                    },
+                    {
+                        'playlist': 11,
+                        'tier': 13,
+                        'skill': 1294,
+                        'tier_max': 13,
+                        'matches_played': 106,
+                        'division': 2
+                    },
+                    {
+                        'playlist': 12,
+                        'tier': 10,
+                        'skill': 999,
+                        'tier_max': 10,
+                        'matches_played': 64,
+                        'division': 3
+                    },
+                    {
+                        'playlist': 13,
+                        'tier': 12,
+                        'skill': 1223,
+                        'tier_max': 12,
+                        'matches_played': 60,
+                    'division': 3
+                    }
+                ]
+            }
+        ]
+        """
+
+        assert response.status_code == 200
+
+        assert len(data['player_skills']) == 4
+        assert data['user_id'] == 76561198024807207
+
+        assert data['player_skills'][0]['playlist'] == 10
+        assert data['player_skills'][0]['matches_played'] > 0
+
+        assert data['player_skills'][1]['playlist'] == 11
+        assert data['player_skills'][1]['matches_played'] > 0
+
+        assert data['player_skills'][2]['playlist'] == 12
+        assert data['player_skills'][2]['matches_played'] > 0
+
+        assert data['player_skills'][3]['playlist'] == 13
+        assert data['player_skills'][3]['matches_played'] > 0
+
+    def test_authenticated_get_player_titles_no_titles(self):
+        response = rl_auth.get_player_titles('steam', 76561198022035654)
+
+        assert response.status_code == 200
+        assert len(response.json()) == 0
+
+    def test_authenticated_get_player_titles_has_titles(self):
+        response = rl_auth.get_player_titles('steam', 76561198024807207)
+
+        assert response.status_code == 200
+        assert response.json() == [{'title': 'Season2GrandChampion'}]
+
+    def test_authenticated_get_stats_value_for_user(self):
+        response = rl_auth.get_stats_value_for_user('steam', 'assists', 76561198024807207)
+        data = response.json()[0]
+
+        """
+        [
+            {
+                'stat_type': 'assists',
+                'user_id': 76561198024807207,
+                'user_name': '[SA] Snaski',
+                'value': 5766
+            }
+        ]
+        """
+
+        assert response.status_code == 200
+        assert data['stat_type'] == 'assists'
+        assert data['user_id'] == 76561198024807207
+        assert data['value'] > 0
