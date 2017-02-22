@@ -1,3 +1,5 @@
+import json
+
 import requests
 from rlapi import VERSION
 
@@ -16,8 +18,22 @@ class RocketLeagueAPI(object):
         self.DEBUG_REQUEST = kwargs.get('debug_request', False)
         self.DEBUG_RESPONSE = kwargs.get('debug_response', False)
 
+    def debug_request(self, response):
+        req = response.request
+
+        command = "curl -X {method} -H {headers} {data} '{uri}'"
+        method = req.method
+        uri = req.url
+        data = "-d '{}'".format(req.body) if req.body else ''
+        headers = ["'{0}: {1}'".format(k, v) for k, v in req.headers.items()]
+        headers = " -H ".join(headers)
+        return command.format(method=method, headers=headers, data=data, uri=uri)
+
     def verify_platform(self, platform):
-        assert platform in self.PLATFORMS
+        assert platform in self.PLATFORMS, "Platform should be {}. You provided {}.".format(
+            ', '.join(self.PLATFORMS[:-1]) + ' or ' + self.PLATFORMS[-1],
+            platform,
+        )
 
     def verify_stat_type(self, stat_type):
         if stat_type is not None:
@@ -54,6 +70,9 @@ class RocketLeagueAPI(object):
         if self.DEBUG_REQUEST:
             return request_method, request_url, data
 
+        if request_method == 'POST':
+            data = json.dumps(data)
+
         request = getattr(requests, request_method.lower())(request_url, headers={
             'Authorization': 'Token ' + self.TOKEN,
             'User-Agent': 'python-rocket-league ' + '.'.join(str(ver) for ver in VERSION),
@@ -63,7 +82,10 @@ class RocketLeagueAPI(object):
         if self.DEBUG_RESPONSE:
             return request
 
-        return request.json()
+        try:
+            return request.json()
+        except json.decoder.JSONDecodeError:
+            return request.text
 
     # GET /api/v1/population/
     def get_population(self):
