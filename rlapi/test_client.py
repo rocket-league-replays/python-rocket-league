@@ -344,7 +344,8 @@ class TestAuthenticatedCalls(object):
         response = rl_auth.get_player_titles('steam', 76561198024807207)
 
         assert response.status_code == 200
-        assert response.json() == [{'title': 'Season2GrandChampion'}]
+        assert len(response.json()) > 0
+        assert {'title': 'Season2GrandChampion'} in response.json()
 
     def test_authenticated_get_stats_value_for_user(self):
         response = rl_auth.get_stats_value_for_user('steam', 'assists', 76561198024807207)
