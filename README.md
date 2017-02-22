@@ -227,6 +227,13 @@ Returns stat values for one or more players for a specific stat type.
 ]
 ```
 
+## Running tests
+
+```
+pip install .[test]
+pytest --cov-report=html --cov=rlapi -v -x -n auto
+```
+
 ## Support
 
 If you are having a problem with the client library, then you can open an [issue][5].
