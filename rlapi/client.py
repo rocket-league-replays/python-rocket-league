@@ -1,7 +1,6 @@
 import json
 
 import requests
-from rlapi import VERSION
 from rlapi.constants import *
 
 
