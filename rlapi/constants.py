@@ -1,3 +1,6 @@
+# Library data
+VERSION = (0, 0, 1)
+
 # API data
 API_VERSION = '1'
 API_BASE_URL = 'https://api.rocketleague.com/api/v' + API_VERSION + '/'

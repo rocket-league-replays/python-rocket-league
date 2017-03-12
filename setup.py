@@ -2,7 +2,7 @@
 # coding: utf-8
 from setuptools import find_packages, setup
 
-from rlapi import VERSION
+from rlapi.constants import VERSION
 
 setup(
     name="python-rocket-league",
