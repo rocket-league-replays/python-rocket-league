@@ -33,6 +33,12 @@ Must be one of the following values:
 * ps4
 * xboxone
 
+These are also available as the following constants (from `rlapi.constants`):
+
+* `PLATFORM_STEAM`
+* `PLATFORM_PLAYSTATION`
+* `PLATFORM_XBOX`
+
 ### `playlist`
 
 Must be one of the following numerical values:
@@ -41,6 +47,13 @@ Must be one of the following numerical values:
 * 11 (Ranked Doubles)
 * 12 (Ranked Solo Standard)
 * 13 (Ranked Standard)
+
+These are also available as the following constants (from `rlapi.constants`):
+
+* `PLAYLIST_RANKED_DUELS`
+* `PLAYLIST_RANKED_DOUBLES`
+* `PLAYLIST_RANKED_SOLO_STANDARD`
+* `PLAYLIST_RANKED_STANDARD`
 
 ### `stat_type`
 
@@ -52,6 +65,15 @@ Must be one of the following values:
 * saves
 * shots
 * wins
+
+These are also available as the following constants (from `rlapi.constants`):
+
+* `STAT_ASSISTS`
+* `STAT_GOALS`
+* `STAT_MVPS`
+* `STAT_SAVES`
+* `STAT_SHOTS`
+* `STAT_WINS`
 
 ### `player_id`
 
@@ -225,6 +247,25 @@ Returns stat values for one or more players for a specific stat type.
 		]
 	}
 ]
+```
+
+### get_stats_values_for_user(platform, player_id)`
+
+Returns all stat values for one or more players.  This is a utility method to allow you to get all of the stats for one or more players without calling `get_stats_value_for_user()` 6 times per player. Each of the players will have their own key in the response, the key will be the player ID for Steam users and the player name for all other platforms.
+
+#### Response
+
+```
+{
+    76561198024807207: {
+        'saves': 14099,
+        'wins': 7803,
+        'mvps': 3757,
+        'shots': 42193,
+        'goals': 18017,
+        'assists': 9284
+    }
+}
 ```
 
 ## Running tests
