@@ -243,7 +243,7 @@ If you are having a problem with the data that is being returned, then you can p
 
 [Daniel Samuels][2] for [Rocket League Replays][3].
 
-[1]: https://api.rocketleaguegame.com/
+[1]: https://api.rocketleague.com/
 [2]: https://github.com/danielsamuels/
 [3]: https://www.rocketleaguereplays.com/
 [4]: http://psyonix.com/forum/viewtopic.php?p=292576#p292576

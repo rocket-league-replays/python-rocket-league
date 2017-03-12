@@ -2,16 +2,32 @@ import json
 
 import requests
 from rlapi import VERSION
+from rlapi.constants import *
 
 
 class RocketLeagueAPI(object):
 
-    PLATFORMS = ['steam', 'ps4', 'xboxone']
-    STAT_TYPES = ['assists', 'goals', 'mvps', 'saves', 'shots', 'wins']
-    PLAYLISTS = [10, 11, 12, 13]
+    PLATFORMS = [
+        PLATFORM_STEAM,
+        PLATFORM_PLAYSTATION,
+        PLATFORM_XBOX,
+    ]
 
-    API_VERSION = '1'
-    API_BASE_URL = 'https://api.rocketleaguegame.com/api/v' + API_VERSION + '/'
+    STAT_TYPES = [
+        STAT_ASSISTS,
+        STAT_GOALS,
+        STAT_MVPS,
+        STAT_SAVES,
+        STAT_SHOTS,
+        STAT_WINS,
+    ]
+
+    PLAYLISTS = [
+        PLAYLIST_RANKED_DUELS,
+        PLAYLIST_RANKED_DOUBLES,
+        PLAYLIST_RANKED_SOLO_STANDARD,
+        PLAYLIST_RANKED_STANDARD,
+    ]
 
     def __init__(self, token=None, *args, **kwargs):
         self.TOKEN = token
@@ -65,7 +81,7 @@ class RocketLeagueAPI(object):
             return request_method, player_id
 
     def request(self, endpoint, request_method='GET', data=None):
-        request_url = self.API_BASE_URL + endpoint + '/'
+        request_url = API_BASE_URL + endpoint + '/'
 
         if self.DEBUG_REQUEST:
             return request_method, request_url, data
@@ -161,3 +177,34 @@ class RocketLeagueAPI(object):
             stat_type=stat_type,
             player_id='/' + str(player_id) if request_method == 'GET' else '',
         ), request_method, data)
+
+    # Custom method, smooths over the fact that `get_stats_value_for_user` only
+    # returns one stat at a time.
+    def get_stats_values_for_user(self, platform, player_id):
+        # Disable the debug response system.
+        debug_response = self.DEBUG_RESPONSE
+        self.DEBUG_RESPONSE = False
+
+        data = {
+            stat_type: self.get_stats_value_for_user(platform, stat_type, player_id)
+            for stat_type in self.STAT_TYPES
+        }
+
+        # Merge all of the stats together.
+        player_stats = {}
+
+        for stat_type in data:
+            for player in data[stat_type]:
+                if platform == 'steam':
+                    online_id = player['user_id']
+                else:
+                    online_id = player['user_name']
+
+                if online_id not in player_stats:
+                    player_stats[online_id] = {}
+
+                player_stats[online_id][player['stat_type']] = player['value']
+
+        self.DEBUG_RESPONSE = debug_response
+
+        return player_stats
