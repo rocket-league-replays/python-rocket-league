@@ -17,7 +17,7 @@ The library was written using Python 3.5, but should work with Python 2.7 too, s
 ## Usage
 
 ```
-from rlapi import RocketLeagueAPI
+from rlapi.client import RocketLeagueAPI
 
 rl = RocketLeagueAPI('xxxxx')  # Replace xxxxx with your user token.
 regions = rl.get_regions()
