@@ -193,6 +193,10 @@ class RocketLeagueAPI(object):
         player_stats = {}
 
         for stat_type in data:
+            # If any of the values come back with a 500 error, exclude them.
+            if data[stat_type] == "<h1>Server Error (500)</h1>":
+                continue
+
             for player in data[stat_type]:
                 if platform == 'steam':
                     online_id = player['user_id']

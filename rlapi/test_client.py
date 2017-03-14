@@ -367,6 +367,12 @@ class TestAuthenticatedCalls(object):
         assert data['user_id'] == 76561198024807207
         assert data['value'] > 0
 
+    # The API is currently broken for this use-case. This test should highlight when it's fixed.
+    def test_authenticated_get_stats_value_for_xbox_user_with_space(self):
+        response = rl_auth.get_stats_value_for_user('xboxone', 'assists', 'Liquid Cight')
+        assert response.status_code == 500
+        assert response.text == '<h1>Server Error (500)</h1>'
+
     def test_authenticated_get_stats_values_for_steam_user(self):
         data = rl_auth.get_stats_values_for_user('steam', 76561198024807207)
 
@@ -405,7 +411,6 @@ class TestAuthenticatedCalls(object):
 
     def test_authenticated_get_stats_values_for_xbox_user(self):
         data = rl_auth.get_stats_values_for_user('xboxone', 'Intact')
-        print(data)
 
         """
         {
@@ -439,3 +444,8 @@ class TestAuthenticatedCalls(object):
 
         assert 'assists' in data['Intact']
         assert data['Intact']['assists'] >= 0
+
+    # This will return no data as the sub-calls fail. This test will fail with the API bug is fixed.
+    def test_authenticated_get_stats_values_for_xbox_user_with_space(self):
+        data = rl_auth.get_stats_values_for_user('xboxone', 'Liquid Cight')
+        assert data == {}
