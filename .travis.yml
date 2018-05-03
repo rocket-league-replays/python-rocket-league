@@ -5,7 +5,7 @@ python:
   - "3.4"
   - "3.5"
   - "3.6"
-install: "pip install .[test]"
+install: "pip install .[testing]"
 script: pytest --cov-report=html --cov=rlapi -v -x -n auto
 notifications:
   email: false
