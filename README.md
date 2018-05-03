@@ -55,7 +55,7 @@ These are also available as the following constants (from `rlapi.constants`):
 * `PLAYLIST_RANKED_SOLO_STANDARD`
 * `PLAYLIST_RANKED_STANDARD`
 
-### `stat_type`
+### `stat_type`
 
 Must be one of the following values:
 
@@ -93,7 +93,7 @@ Values for Xbox One and PS4 are strings, values for Steam are integers ([though 
 
 ## Endpoints
 
-### `get_population()`
+### `get_population()`
 
 Returns the population data for each platform.
 
@@ -112,11 +112,11 @@ Returns the population data for each platform.
 ]
 ```
 
-### `get_regions()`
+### `get_regions()`
 
 Returns the list of regions available in the game.
 
-#### Response
+#### Response
 
 ```
 [
@@ -132,7 +132,7 @@ Returns the list of regions available in the game.
 ]
 ```
 
-### `get_skill_leaderboard(platform, playlist)`
+### `get_skill_leaderboard(platform, playlist)`
 
 Returns the top 100 entries of the skill leaderboard. Includes the player's username and tier.
 
@@ -149,11 +149,11 @@ Returns the top 100 entries of the skill leaderboard. Includes the player's user
 ]
 ```
 
-### `get_stats_leaderboard(platform, stat_type)`
+### `get_stats_leaderboard(platform, stat_type)`
 
 Returns the top 100 entries of the stats leaderboard, optionally filtered to a specific stat type. If you do not wish to filter the leaderboard, simply pass `platform` by itself.
 
-#### Response
+#### Response
 
 ```
 [
@@ -185,11 +185,11 @@ Returns the top 100 entries of the stats leaderboard, optionally filtered to a s
 ]
 ```
 
-### `get_player_skills(platform, player_id)`
+### `get_player_skills(platform, player_id)`
 
 Return skill values for one or more players.
 
-#### Response
+#### Response
 
 ```
 [
@@ -224,7 +224,7 @@ Returns a list of titles available for a player.  You cannot request data for mu
 ]
 ```
 
-### `get_stats_value_for_user(platform, stat_type, player_id)`
+### `get_stats_value_for_user(platform, stat_type, player_id)`
 
 Returns stat values for one or more players for a specific stat type.
 
@@ -249,11 +249,11 @@ Returns stat values for one or more players for a specific stat type.
 ]
 ```
 
-### get_stats_values_for_user(platform, player_id)`
+### get_stats_values_for_user(platform, player_id)`
 
 Returns all stat values for one or more players.  This is a utility method to allow you to get all of the stats for one or more players without calling `get_stats_value_for_user()` 6 times per player. Each of the players will have their own key in the response, the key will be the player ID for Steam users and the player name for all other platforms.
 
-#### Response
+#### Response
 
 ```
 {
@@ -280,7 +280,7 @@ pytest --cov-report=html --cov=rlapi -v -x -n auto
 If you are having a problem with the client library, then you can open an [issue][5].
 If you are having a problem with the data that is being returned, then you can post on the [API support forum][6].
 
-## Author
+## Author
 
 [Daniel Samuels][2] for [Rocket League Replays][3].
 
