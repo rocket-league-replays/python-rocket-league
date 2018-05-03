@@ -2,7 +2,7 @@
 
 Python library for interacting with the official [Rocket League API][1].
 
-[![Build Status](https://travis-ci.org/rocket-league-replays/python-rocket-league?branch=master)](https://travis-ci.org/rocket-league-replays/python-rocket-league)
+[![Build Status](https://travis-ci.org/rocket-league-replays/python-rocket-league.svg?branch=master)](https://travis-ci.org/rocket-league-replays/python-rocket-league)
 
 ## Installation
 
@@ -271,7 +271,7 @@ Returns all stat values for one or more players.  This is a utility method to al
 ## Running tests
 
 ```
-pip install .[test]
+pip install .[testing]
 pytest --cov-report=html --cov=rlapi -v -x -n auto
 ```
 
