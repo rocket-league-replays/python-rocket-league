@@ -1,5 +1,5 @@
 # Library data
-VERSION = (0, 0, 2)
+VERSION = (0, 0, 3)
 
 # API data
 API_VERSION = '1'
@@ -9,6 +9,7 @@ API_BASE_URL = 'https://api.rocketleague.com/api/v' + API_VERSION + '/'
 PLATFORM_XBOX = 'xboxone'
 PLATFORM_PLAYSTATION = 'ps4'
 PLATFORM_STEAM = 'steam'
+PLATFORM_SWITCH = 'switch'
 
 # Playlists
 PLAYLIST_RANKED_DUELS = 10

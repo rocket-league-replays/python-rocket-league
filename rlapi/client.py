@@ -10,6 +10,7 @@ class RocketLeagueAPI(object):
         PLATFORM_STEAM,
         PLATFORM_PLAYSTATION,
         PLATFORM_XBOX,
+        PLATFORM_SWITCH,
     ]
 
     STAT_TYPES = [

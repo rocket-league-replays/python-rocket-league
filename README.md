@@ -32,12 +32,14 @@ Must be one of the following values:
 * steam
 * ps4
 * xboxone
+* switch
 
 These are also available as the following constants (from `rlapi.constants`):
 
 * `PLATFORM_STEAM`
 * `PLATFORM_PLAYSTATION`
 * `PLATFORM_XBOX`
+* `PLATFORM_SWITCH`
 
 ### `playlist`
 
@@ -122,11 +124,11 @@ Returns the list of regions available in the game.
 [
 	{
 		"region": "EU",
-		"platforms": "Steam,PS4,XboxOne"
+		"platforms": "Steam,PS4,XboxOne,Switch"
 	},
 	{
 		"region": "USW",
-		"platforms": "Steam,PS4,XboxOne"
+		"platforms": "Steam,PS4,XboxOne,Switch"
 	},
 	...
 ]
