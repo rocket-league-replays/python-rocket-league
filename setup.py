@@ -14,6 +14,8 @@ setup(
     include_package_data=True,
     zip_safe=False,
     description='Client library for the official Rocket League API.',
+    long_description=open('README.md').read(),
+    long_description_content_type='text/markdown',
     install_requires=['requests'],
     extras_require={
         'testing': [
